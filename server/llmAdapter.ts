@@ -36,10 +36,10 @@ export interface ChatCompletionResult {
  * Auto-detects if OPENROUTER_API_KEY is present OR if GEMINI_API_KEY starts with "sk-or-".
  */
 export function getLLMProvider(): LLMProvider {
-  const openRouterKey = process.env.OPENROUTER_API_KEY || '';
-  const geminiKey = process.env.GEMINI_API_KEY || '';
+  const openRouterKey = (process.env.OPENROUTER_API_KEY || '').trim().replace(/^['"]|['"]$/g, '');
+  const geminiKey = (process.env.GEMINI_API_KEY || '').trim().replace(/^['"]|['"]$/g, '');
 
-  if (openRouterKey.trim() || geminiKey.trim().startsWith('sk-or-')) {
+  if (openRouterKey || geminiKey.startsWith('sk-or-')) {
     return 'openrouter';
   }
   return 'gemini';
@@ -49,12 +49,12 @@ export function getLLMProvider(): LLMProvider {
  * Retrieves the active API key for the detected provider.
  */
 export function getActiveApiKey(): string {
-  const openRouterKey = process.env.OPENROUTER_API_KEY || '';
-  const geminiKey = process.env.GEMINI_API_KEY || '';
+  const openRouterKey = (process.env.OPENROUTER_API_KEY || '').trim().replace(/^['"]|['"]$/g, '');
+  const geminiKey = (process.env.GEMINI_API_KEY || '').trim().replace(/^['"]|['"]$/g, '');
 
-  if (openRouterKey.trim()) return openRouterKey.trim();
-  if (geminiKey.trim().startsWith('sk-or-')) return geminiKey.trim();
-  return geminiKey.trim();
+  if (openRouterKey) return openRouterKey;
+  if (geminiKey.startsWith('sk-or-')) return geminiKey;
+  return geminiKey;
 }
 
 /**
@@ -63,10 +63,13 @@ export function getActiveApiKey(): string {
 export function getActiveModelName(): string {
   const provider = getLLMProvider();
   if (provider === 'openrouter') {
-    // OpenRouter uses namespaced model names like "google/gemini-2.5-flash" or "google/gemini-2.0-flash-001"
-    return process.env.OPENROUTER_MODEL || 'google/gemini-2.5-flash';
+    let raw = (process.env.OPENROUTER_MODEL || 'google/gemini-2.5-flash').trim().replace(/^['"]|['"]$/g, '');
+    if (raw.startsWith('gemini') && !raw.includes('/')) {
+      raw = `google/${raw}`;
+    }
+    return raw || 'google/gemini-2.5-flash';
   }
-  return process.env.GEMINI_MODEL || DEFAULT_MODEL;
+  return (process.env.GEMINI_MODEL || DEFAULT_MODEL).trim().replace(/^['"]|['"]$/g, '');
 }
 
 /**
