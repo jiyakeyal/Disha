@@ -77,10 +77,26 @@ apiRouter.post('/chat', async (req: Request, res: Response): Promise<void> => {
     });
   } catch (error: any) {
     console.error('[Disha API Error in /api/chat]:', error?.message || error);
-    res.status(500).json({
-      error:
-        'Disha could not connect to the education guidance service right now. Please check your API key configuration in environment variables or try again shortly.',
-      detail: error?.message || 'Network or model availability issue.',
+    const recommendedPortals = getRecommendedPortalsForQuery(req.body?.message || '');
+    res.json({
+      text:
+        "**Configuration Required on Vercel:** Disha is online, but needs an API key configured on your Vercel deployment.\n\n" +
+        "**How to fix this in 1 minute on Vercel:**\n" +
+        "1. Open your project in the [Vercel Dashboard](https://vercel.com/dashboard).\n" +
+        "2. Navigate to **Settings → Environment Variables**.\n" +
+        "3. Add a new variable:\n" +
+        "   - **Name:** `OPENROUTER_API_KEY`\n" +
+        "   - **Value:** `sk-or-v1-...` (your OpenRouter API key)\n" +
+        "4. Click **Save** and click **Redeploy** on your latest Vercel deployment.\n\n" +
+        "*(System note: " + (error?.message || 'API key not found in environment') + ")*",
+      citations: [],
+      recommendedPortals,
+      checkedAt: new Date().toISOString(),
+      model: 'openrouter/fallback',
+      provider: 'openrouter',
+      grounded: false,
+      groundingNote: 'Please set OPENROUTER_API_KEY in your Vercel Environment Variables.',
+      isError: true,
     });
   }
 });
