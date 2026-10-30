@@ -23,6 +23,6 @@ export const ai = new GoogleGenAI({
   },
 });
 
-export const DEFAULT_MODEL = 'gemini-flash-lite-latest';
-export const FALLBACK_MODELS = ['gemini-3.8-flash', 'gemini-flash-latest'];
+export const DEFAULT_MODEL = 'gemini-2.5-flash';
+export const FALLBACK_MODELS = ['gemini-2.0-flash', 'gemini-1.5-flash'];
 

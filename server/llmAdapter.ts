@@ -77,15 +77,59 @@ let googleSearchGroundingExhaustedUntil = 0;
 /**
  * Universal Chat Generation
  */
+/**
+ * Universal Chat Generation
+ */
 export async function generateChat(options: ChatCompletionOptions): Promise<ChatCompletionResult> {
   const provider = getLLMProvider();
   const apiKey = getActiveApiKey();
   const modelName = getActiveModelName();
 
-  if (provider === 'openrouter') {
-    return await generateChatWithOpenRouter(options, apiKey, modelName);
-  } else {
-    return await generateChatWithGoogleGemini(options, modelName);
+  try {
+    if (provider === 'openrouter') {
+      return await generateChatWithOpenRouter(options, apiKey, modelName);
+    } else {
+      return await generateChatWithGoogleGemini(options, modelName);
+    }
+  } catch (primaryError: any) {
+    console.error(`[Disha LLM Primary Error - ${provider}]:`, primaryError?.message || primaryError);
+
+    // Cross-provider fallback if both keys exist
+    const openRouterKey = process.env.OPENROUTER_API_KEY || '';
+    const geminiKey = process.env.GEMINI_API_KEY || '';
+
+    if (provider === 'openrouter' && geminiKey.trim() && !geminiKey.trim().startsWith('sk-or-')) {
+      console.log('[Disha LLM Fallback] Falling back from OpenRouter to Google Gemini SDK...');
+      try {
+        return await generateChatWithGoogleGemini(options, 'gemini-2.5-flash');
+      } catch (fbErr: any) {
+        console.error('[Disha LLM Fallback Gemini Error]:', fbErr?.message || fbErr);
+      }
+    } else if (provider === 'gemini' && openRouterKey.trim()) {
+      console.log('[Disha LLM Fallback] Falling back from Google Gemini SDK to OpenRouter...');
+      try {
+        return await generateChatWithOpenRouter(options, openRouterKey.trim(), 'google/gemini-2.5-flash');
+      } catch (fbErr: any) {
+        console.error('[Disha LLM Fallback OpenRouter Error]:', fbErr?.message || fbErr);
+      }
+    }
+
+    // Safe user-facing response if all providers/models fail
+    return {
+      text:
+        "**Service Connectivity Note:** Disha is temporarily unable to reach the AI model provider. \n\n" +
+        "**Possible Causes:**\n" +
+        "- Missing or invalid API Key (`OPENROUTER_API_KEY` or `GEMINI_API_KEY` in environment variables).\n" +
+        "- Temporary rate limit or network glitch from the model provider.\n\n" +
+        "**What you can do:**\n" +
+        "1. Verify that `OPENROUTER_API_KEY` or `GEMINI_API_KEY` is set in your Vercel / environment settings.\n" +
+        "2. Click the **Retry** button below or ask your question again in a moment.",
+      citations: [],
+      model: modelName,
+      provider,
+      grounded: false,
+      groundingNote: 'Model service temporarily unreachable. Please check API keys in environment variables.',
+    };
   }
 }
 
@@ -129,23 +173,62 @@ async function generateChatWithOpenRouter(
     temperature: 0.7,
   };
 
-  // Optionally enable OpenRouter web search plugin for ground truth verification
   if (enableSearch) {
     requestBody.plugins = [{ id: 'web' }];
   }
 
   const appUrl = process.env.APP_URL || 'https://disha-career.vercel.app';
+  const headers = {
+    'Authorization': `Bearer ${apiKey}`,
+    'Content-Type': 'application/json',
+    'HTTP-Referer': appUrl,
+    'X-Title': 'Disha - Career Choices, Clearly',
+  };
 
-  const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+  let response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
     method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json',
-      'HTTP-Referer': appUrl,
-      'X-Title': 'Disha - Career Choices, Clearly',
-    },
+    headers,
     body: JSON.stringify(requestBody),
   });
+
+  // Retry without plugins if plugin request fails
+  if (!response.ok && requestBody.plugins) {
+    console.warn('[OpenRouter] Search plugin request returned error. Retrying without web plugin...');
+    delete requestBody.plugins;
+    response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers,
+      body: JSON.stringify(requestBody),
+    });
+  }
+
+  // Fallback to alternative OpenRouter models if requested model fails
+  if (!response.ok) {
+    const fallbackModels = [
+      'google/gemini-2.5-flash',
+      'google/gemini-2.0-flash-001',
+      'meta-llama/llama-3.3-70b-instruct',
+    ];
+
+    for (const fbModel of fallbackModels) {
+      if (fbModel === modelName) continue;
+      console.log(`[OpenRouter] Primary model ${modelName} failed (${response.status}). Retrying with ${fbModel}...`);
+      requestBody.model = fbModel;
+      delete requestBody.plugins;
+
+      const fbResp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(requestBody),
+      });
+
+      if (fbResp.ok) {
+        response = fbResp;
+        modelName = fbModel;
+        break;
+      }
+    }
+  }
 
   if (!response.ok) {
     const errorText = await response.text();
@@ -219,59 +302,63 @@ async function generateChatWithGoogleGemini(
 
   const isGroundingQuotaPaused = Date.now() < googleSearchGroundingExhaustedUntil;
 
-  if (!isGroundingQuotaPaused) {
-    try {
-      const response = await ai.models.generateContent({
-        model: modelName,
-        contents: contents,
-        config: {
-          systemInstruction: systemInstruction,
-          temperature: 0.7,
-          tools: [{ googleSearch: {} }],
-        },
-      });
-
-      responseText = response.text || '';
-      const candidate = response.candidates?.[0];
-      const groundingMetadata = candidate?.groundingMetadata;
-      citations = parseGroundingMetadata(groundingMetadata);
-      searchGroundingSucceeded = true;
-    } catch (groundingError: any) {
-      const errMsg = String(groundingError?.message || '');
-      const isQuotaExhausted =
-        errMsg.includes('429') || errMsg.includes('RESOURCE_EXHAUSTED') || errMsg.includes('quota');
-
-      if (isQuotaExhausted) {
-        googleSearchGroundingExhaustedUntil = Date.now() + 15 * 60 * 1000;
-        console.log('[Disha Server] Google Search grounding quota paused. Falling back to core model.');
-      }
-
-      groundingNote =
-        'Live search grounding quota is unavailable. Changing admission dates and fees are not verified in this session; please verify with the official portals below.';
-
-      const fallbackResponse = await ai.models.generateContent({
-        model: modelName,
-        contents: contents,
-        config: {
-          systemInstruction: systemInstruction,
-          temperature: 0.7,
-        },
-      });
-      responseText = fallbackResponse.text || '';
+  const attemptGeneration = async (model: string, useSearch: boolean): Promise<string> => {
+    const config: any = {
+      systemInstruction: systemInstruction,
+      temperature: 0.7,
+    };
+    if (useSearch) {
+      config.tools = [{ googleSearch: {} }];
     }
-  } else {
-    groundingNote =
-      'Live search grounding quota is unavailable. Changing admission dates and fees are not verified in this session; please verify with the official portals below.';
-
-    const fallbackResponse = await ai.models.generateContent({
-      model: modelName,
+    const resp = await ai.models.generateContent({
+      model: model,
       contents: contents,
-      config: {
-        systemInstruction: systemInstruction,
-        temperature: 0.7,
-      },
+      config: config,
     });
-    responseText = fallbackResponse.text || '';
+    if (useSearch) {
+      const candidate = resp.candidates?.[0];
+      citations = parseGroundingMetadata(candidate?.groundingMetadata);
+      searchGroundingSucceeded = true;
+    }
+    return resp.text || '';
+  };
+
+  try {
+    if (!isGroundingQuotaPaused) {
+      try {
+        responseText = await attemptGeneration(modelName, true);
+      } catch (groundingError: any) {
+        const errMsg = String(groundingError?.message || '');
+        if (errMsg.includes('429') || errMsg.includes('RESOURCE_EXHAUSTED') || errMsg.includes('quota')) {
+          googleSearchGroundingExhaustedUntil = Date.now() + 15 * 60 * 1000;
+          console.log('[Disha Server] Google Search grounding quota paused. Falling back to core model.');
+        }
+        groundingNote =
+          'Live search grounding quota is unavailable. Changing admission dates and fees are not verified in this session; please verify with official portals.';
+        responseText = await attemptGeneration(modelName, false);
+      }
+    } else {
+      groundingNote =
+        'Live search grounding quota is unavailable. Changing admission dates and fees are not verified in this session; please verify with official portals.';
+      responseText = await attemptGeneration(modelName, false);
+    }
+  } catch (primaryModelErr: any) {
+    console.warn(`[Google Gemini] Primary model ${modelName} failed. Trying fallback models...`);
+    const fallbackModels = ['gemini-2.0-flash', 'gemini-1.5-flash'];
+    let succeeded = false;
+    for (const fbModel of fallbackModels) {
+      try {
+        responseText = await attemptGeneration(fbModel, false);
+        modelName = fbModel;
+        succeeded = true;
+        break;
+      } catch {
+        // continue
+      }
+    }
+    if (!succeeded) {
+      throw primaryModelErr;
+    }
   }
 
   return {
