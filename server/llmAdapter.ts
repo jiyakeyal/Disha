@@ -142,7 +142,7 @@ async function generateChatWithOpenRouter(
       'Authorization': `Bearer ${apiKey}`,
       'Content-Type': 'application/json',
       'HTTP-Referer': appUrl,
-      'X-Title': 'Disha — Career Choices, Clearly',
+      'X-Title': 'Disha - Career Choices Clearly',
     },
     body: JSON.stringify(requestBody),
   });
@@ -249,7 +249,35 @@ async function generateChatWithGoogleGemini(
       groundingNote =
         'Live search grounding quota is unavailable. Changing admission dates and fees are not verified in this session; please verify with the official portals below.';
 
-      const fallbackResponse = await ai.models.generateContent({
+      let fallbackResponse: any;
+      try {
+        fallbackResponse = await ai.models.generateContent({
+          model: modelName,
+          contents: contents,
+          config: {
+            systemInstruction: systemInstruction,
+            temperature: 0.7,
+          },
+        });
+      } catch (liteErr) {
+        fallbackResponse = await ai.models.generateContent({
+          model: 'gemini-3.8-flash',
+          contents: contents,
+          config: {
+            systemInstruction: systemInstruction,
+            temperature: 0.7,
+          },
+        });
+      }
+      responseText = fallbackResponse.text || '';
+    }
+  } else {
+    groundingNote =
+      'Live search grounding quota is unavailable. Changing admission dates and fees are not verified in this session; please verify with the official portals below.';
+
+    let fallbackResponse: any;
+    try {
+      fallbackResponse = await ai.models.generateContent({
         model: modelName,
         contents: contents,
         config: {
@@ -257,20 +285,16 @@ async function generateChatWithGoogleGemini(
           temperature: 0.7,
         },
       });
-      responseText = fallbackResponse.text || '';
+    } catch (liteErr) {
+      fallbackResponse = await ai.models.generateContent({
+        model: 'gemini-3.8-flash',
+        contents: contents,
+        config: {
+          systemInstruction: systemInstruction,
+          temperature: 0.7,
+        },
+      });
     }
-  } else {
-    groundingNote =
-      'Live search grounding quota is unavailable. Changing admission dates and fees are not verified in this session; please verify with the official portals below.';
-
-    const fallbackResponse = await ai.models.generateContent({
-      model: modelName,
-      contents: contents,
-      config: {
-        systemInstruction: systemInstruction,
-        temperature: 0.7,
-      },
-    });
     responseText = fallbackResponse.text || '';
   }
 

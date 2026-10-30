@@ -61,12 +61,12 @@ export const MessageItem: React.FC<MessageItemProps> = ({
     window.speechSynthesis.speak(utterance);
   };
 
-  // User message rendering
+  // User message rendering: styled with warm translucent capsule
   if (isUser) {
     return (
       <div className="flex justify-end mb-4 group">
-        <div className="max-w-[85%] sm:max-w-[75%] rounded-2xl rounded-tr-xs bg-amber-900 text-white px-4 py-3 shadow-xs">
-          <div className="flex items-center gap-1.5 text-xs text-amber-200 mb-1">
+        <div className="max-w-[85%] sm:max-w-[75%] rounded-3xl rounded-tr-sm bg-gradient-to-r from-orange-600 to-amber-700 text-white px-5 py-3.5 shadow-lg border border-white/30 backdrop-blur-md">
+          <div className="flex items-center gap-1.5 text-xs text-orange-100 mb-1">
             <User className="w-3.5 h-3.5" />
             <span className="font-medium">You</span>
             <span className="text-[10px] opacity-75 ml-auto">
@@ -75,10 +75,10 @@ export const MessageItem: React.FC<MessageItemProps> = ({
           </div>
 
           {message.documentMeta && (
-            <div className="mb-2 flex items-center gap-1.5 text-xs bg-amber-950/40 rounded px-2 py-1 text-amber-100 border border-amber-800">
+            <div className="mb-2 flex items-center gap-1.5 text-xs bg-black/20 rounded-full px-3 py-1 text-orange-100 border border-white/20">
               <FileText className="w-3.5 h-3.5" />
               <span className="truncate">{message.documentMeta.filename}</span>
-              <span className="text-[10px] bg-amber-800 px-1 rounded ml-auto">Redacted transient review</span>
+              <span className="text-[10px] bg-orange-950/60 px-2 py-0.5 rounded-full ml-auto">Review</span>
             </div>
           )}
 
@@ -88,50 +88,50 @@ export const MessageItem: React.FC<MessageItemProps> = ({
     );
   }
 
-  // Model (Disha) message rendering
+  // Model (Disha) message rendering: styled with frosted glass container
   const sections = parseResponseSections(message.content);
 
   return (
     <div className="flex justify-start mb-6 group">
-      <div className="w-full max-w-[92%] sm:max-w-[85%] rounded-2xl rounded-tl-xs bg-white border border-stone-200/90 px-5 py-4 shadow-xs">
+      <div className="w-full max-w-[92%] sm:max-w-[85%] rounded-3xl rounded-tl-sm glass-card px-5 sm:px-6 py-4 sm:py-5 shadow-xl text-stone-900">
         {/* Header bar */}
-        <div className="flex items-center justify-between pb-2 mb-3 border-b border-stone-100">
-          <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-full bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-800">
+        <div className="flex items-center justify-between pb-2.5 mb-3.5 border-b border-white/50">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-full bg-white/60 border border-white/80 flex items-center justify-center text-orange-900 shadow-xs">
               <Sparkles className="w-3.5 h-3.5" />
             </div>
             <div>
               <span className="font-semibold text-sm text-stone-900">Disha</span>
-              <span className="text-[11px] text-stone-500 ml-2">Career Companion</span>
+              <span className="text-[11px] text-stone-600/90 ml-2 font-medium">Career Companion</span>
             </div>
           </div>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             <button
               onClick={handleToggleSpeech}
               title={isPlayingAudio ? 'Stop readout' : 'Listen to this response'}
               aria-label={isPlayingAudio ? 'Stop readout' : 'Listen to this response'}
-              className={`p-1.5 rounded-md text-stone-500 hover:text-stone-800 hover:bg-stone-100 transition-colors ${
-                isPlayingAudio ? 'text-amber-800 bg-amber-50 animate-pulse' : ''
+              className={`p-1.5 rounded-full text-stone-700 hover:text-stone-900 glass-pill-btn transition-colors ${
+                isPlayingAudio ? 'bg-orange-200/80 animate-pulse' : ''
               }`}
             >
-              {isPlayingAudio ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+              {isPlayingAudio ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
             </button>
 
             <button
               onClick={handleCopy}
               title="Copy answer"
               aria-label="Copy answer text"
-              className="p-1.5 rounded-md text-stone-500 hover:text-stone-800 hover:bg-stone-100 transition-colors"
+              className="p-1.5 rounded-full text-stone-700 hover:text-stone-900 glass-pill-btn transition-colors"
             >
-              {copied ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
+              {copied ? <Check className="w-3.5 h-3.5 text-emerald-700" /> : <Copy className="w-3.5 h-3.5" />}
             </button>
 
             {message.isError && onRetry && (
               <button
                 onClick={() => onRetry(message.content)}
                 title="Retry message"
-                className="p-1.5 rounded-md text-amber-700 hover:bg-amber-50 transition-colors flex items-center gap-1 text-xs"
+                className="px-2.5 py-1 rounded-full glass-pill-btn text-orange-900 transition-colors flex items-center gap-1 text-xs"
               >
                 <RotateCcw className="w-3.5 h-3.5" />
                 <span>Retry</span>
@@ -141,7 +141,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({
         </div>
 
         {/* Content body */}
-        <div className="text-stone-800 text-sm leading-relaxed space-y-3 font-normal">
+        <div className="text-stone-900 text-sm leading-relaxed space-y-3 font-normal">
           {sections.map((sec, idx) => {
             const isHeard = sec.type === 'heard';
             const isOptions = sec.type === 'options';
@@ -153,18 +153,18 @@ export const MessageItem: React.FC<MessageItemProps> = ({
                 key={idx}
                 className={
                   isHeard
-                    ? 'p-3 bg-stone-50 rounded-lg border border-stone-200/60 text-stone-700 text-xs sm:text-sm'
+                    ? 'p-3.5 bg-white/40 rounded-2xl border border-white/60 text-stone-800 text-xs sm:text-sm'
                     : isOptions
-                    ? 'p-3.5 bg-amber-50/40 rounded-xl border border-amber-200/70'
+                    ? 'p-4 bg-orange-100/40 rounded-2xl border border-white/60'
                     : isTradeoffs
-                    ? 'p-3.5 bg-orange-50/30 rounded-xl border border-orange-200/60'
+                    ? 'p-4 bg-amber-100/40 rounded-2xl border border-white/60'
                     : isNextStep
-                    ? 'p-3 bg-emerald-50/40 rounded-lg border border-emerald-200/60 text-emerald-950'
+                    ? 'p-3.5 bg-emerald-100/40 rounded-2xl border border-white/60 text-emerald-950 font-medium'
                     : ''
                 }
               >
                 {sec.title !== 'Guidance' && (
-                  <h4 className="font-semibold text-xs uppercase tracking-wider text-stone-500 mb-1.5 flex items-center gap-1">
+                  <h4 className="font-semibold text-xs uppercase tracking-wider text-stone-700 mb-1.5 flex items-center gap-1">
                     {sec.title}
                   </h4>
                 )}
@@ -176,10 +176,10 @@ export const MessageItem: React.FC<MessageItemProps> = ({
 
         {/* Official source citations */}
         {message.citations && message.citations.length > 0 && (
-          <div className="mt-4 pt-3 border-t border-stone-100">
-            <div className="text-xs font-semibold text-stone-700 mb-2 flex items-center justify-between">
+          <div className="mt-4 pt-3 border-t border-white/50">
+            <div className="text-xs font-semibold text-stone-800 mb-2 flex items-center justify-between">
               <span>Verified Sources & Reference Portals:</span>
-              <span className="text-[10px] text-stone-500 font-normal">Directly retrieved via Google Search Grounding</span>
+              <span className="text-[10px] text-stone-600 font-normal">Retrieved via Search Grounding</span>
             </div>
             <div className="flex flex-wrap gap-2">
               {message.citations.map((c) => (

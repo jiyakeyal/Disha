@@ -227,7 +227,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#faf9f6] text-stone-900 selection:bg-amber-200">
+    <div className="disha-mosaic-bg min-h-screen flex flex-col text-stone-900 selection:bg-orange-200">
       {/* Top Header */}
       <Header
         onOpenParentSummary={handleGenerateParentSummary}
@@ -255,15 +255,15 @@ export default function App() {
             {/* Loading indicator */}
             {isLoading && (
               <div className="flex justify-start mb-6">
-                <div className="rounded-2xl rounded-tl-xs bg-white border border-amber-200/80 px-5 py-4 shadow-xs flex items-center gap-3">
-                  <div className="w-6 h-6 rounded-full bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-800 animate-pulse">
+                <div className="rounded-3xl rounded-tl-sm glass-card px-5 py-4 shadow-xl flex items-center gap-3">
+                  <div className="w-7 h-7 rounded-full bg-white/60 border border-white/80 flex items-center justify-center text-orange-900 animate-pulse shadow-xs">
                     <Sparkles className="w-3.5 h-3.5" />
                   </div>
                   <div>
-                    <div className="text-xs font-semibold text-stone-800">
+                    <div className="text-xs font-semibold text-stone-900">
                       Disha is reviewing official sources & structuring trade-offs...
                     </div>
-                    <div className="text-[11px] text-stone-500 mt-0.5">
+                    <div className="text-[11px] text-stone-700 mt-0.5">
                       Checking official portals and ensuring neutral, choice-preserving comparisons
                     </div>
                   </div>
