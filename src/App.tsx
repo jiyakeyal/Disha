@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { Header } from './components/Header';
+import { PixelArtHeader } from './components/PixelArtHeader';
 import { WelcomeBanner } from './components/WelcomeBanner';
 import { MessageItem } from './components/MessageItem';
 import { PromptComposer } from './components/PromptComposer';
@@ -227,62 +227,65 @@ export default function App() {
   };
 
   return (
-    <div className="disha-mosaic-bg min-h-screen flex flex-col text-stone-900 selection:bg-orange-200">
-      {/* Top Header */}
-      <Header
-        onOpenParentSummary={handleGenerateParentSummary}
-        onOpenSettings={() => setIsSettingsOpen(true)}
-        onOpenEvaluation={() => setIsEvaluationOpen(true)}
-        onResetSession={handleResetSession}
-        hasMessages={messages.length > 0}
-      />
+    <div className="min-h-screen bg-[#eceae6] text-stone-900 selection:bg-orange-200 py-0 sm:py-6 px-0 sm:px-4 flex justify-center items-start">
+      {/* Centered Presentation Card (Matching Reference Photo Frame) */}
+      <div className="w-full max-w-4xl bg-white rounded-none sm:rounded-[36px] shadow-2xl border border-stone-200/80 overflow-hidden flex flex-col min-h-screen sm:min-h-[92vh]">
+        {/* Pixel Art Mosaic Header with Frosted Glass Buttons */}
+        <PixelArtHeader
+          onOpenParentSummary={handleGenerateParentSummary}
+          onOpenSettings={() => setIsSettingsOpen(true)}
+          onOpenEvaluation={() => setIsEvaluationOpen(true)}
+          onResetSession={handleResetSession}
+          hasMessages={messages.length > 0}
+        />
 
-      {/* Main Conversation Canvas */}
-      <main className="flex-1 max-w-4xl w-full mx-auto px-4 py-4 sm:py-6 flex flex-col justify-between">
-        {messages.length === 0 ? (
-          <WelcomeBanner onSelectPrompt={(text) => handleSendMessage(text)} />
-        ) : (
-          <div className="flex-1 space-y-2">
-            {messages.map((msg) => (
-              <MessageItem
-                key={msg.id}
-                message={msg}
-                onRetry={(text) => handleSendMessage(text)}
-                speechAudioEnabled={settings.speechAudioEnabled}
-              />
-            ))}
+        {/* Main Pure White Content Area */}
+        <main className="flex-1 w-full px-4 sm:px-8 py-5 sm:py-6 flex flex-col justify-between bg-white">
+          {messages.length === 0 ? (
+            <WelcomeBanner onSelectPrompt={(text) => handleSendMessage(text)} />
+          ) : (
+            <div className="flex-1 space-y-4 max-w-3xl mx-auto w-full">
+              {messages.map((msg) => (
+                <MessageItem
+                  key={msg.id}
+                  message={msg}
+                  onRetry={(text) => handleSendMessage(text)}
+                  speechAudioEnabled={settings.speechAudioEnabled}
+                />
+              ))}
 
-            {/* Loading indicator */}
-            {isLoading && (
-              <div className="flex justify-start mb-6">
-                <div className="rounded-3xl rounded-tl-sm glass-card px-5 py-4 shadow-xl flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-full bg-white/60 border border-white/80 flex items-center justify-center text-orange-900 animate-pulse shadow-xs">
-                    <Sparkles className="w-3.5 h-3.5" />
-                  </div>
-                  <div>
-                    <div className="text-xs font-semibold text-stone-900">
-                      Disha is reviewing official sources & structuring trade-offs...
+              {/* Loading indicator */}
+              {isLoading && (
+                <div className="flex justify-start mb-6">
+                  <div className="rounded-3xl rounded-tl-xs bg-white border border-orange-200/90 px-5 py-4 shadow-sm flex items-center gap-3">
+                    <div className="w-7 h-7 rounded-full bg-orange-100 border border-orange-300 flex items-center justify-center text-orange-600 animate-pulse">
+                      <Sparkles className="w-4 h-4" />
                     </div>
-                    <div className="text-[11px] text-stone-700 mt-0.5">
-                      Checking official portals and ensuring neutral, choice-preserving comparisons
+                    <div>
+                      <div className="text-xs font-bold text-stone-900">
+                        Disha is reviewing official sources & structuring trade-offs...
+                      </div>
+                      <div className="text-[11px] text-stone-500 mt-0.5">
+                        Checking official portals and ensuring neutral, choice-preserving comparisons
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-            <div ref={chatBottomRef} />
-          </div>
-        )}
-      </main>
+              )}
+              <div ref={chatBottomRef} />
+            </div>
+          )}
+        </main>
 
-      {/* Message Composer */}
-      <PromptComposer
-        onSendMessage={handleSendMessage}
-        isLoading={isLoading}
-        onStop={handleStop}
-        onOpenUploadModal={() => setIsDocumentUploadOpen(true)}
-        hasMessages={messages.length > 0}
-      />
+        {/* Message Composer anchored cleanly at bottom of the white card */}
+        <PromptComposer
+          onSendMessage={handleSendMessage}
+          isLoading={isLoading}
+          onStop={handleStop}
+          onOpenUploadModal={() => setIsDocumentUploadOpen(true)}
+          hasMessages={messages.length > 0}
+        />
+      </div>
 
       {/* Modals & Drawers */}
       <ParentSummaryModal

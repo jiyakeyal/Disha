@@ -136,38 +136,38 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto no-print">
-      <div className="bg-white rounded-2xl max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-stone-200 overflow-hidden animate-scale-up">
+      <div className="bg-white rounded-3xl max-w-xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-stone-200 overflow-hidden animate-scale-up">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-stone-200 flex items-center justify-between bg-stone-50/80">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center">
+        <div className="px-6 py-4.5 border-b border-stone-100 flex items-center justify-between bg-stone-50/80">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-800 flex items-center justify-center">
               <ShieldCheck className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="font-serif-editorial font-bold text-base text-stone-900">
+              <h3 className="font-bold text-base text-stone-900 tracking-tight">
                 Transient Document Review
               </h3>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-stone-400">
                 Redact identifiers first. No raw files are saved to database.
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-stone-400 hover:text-stone-700 hover:bg-stone-200/60 rounded-lg transition-colors cursor-pointer"
+            className="p-2 text-stone-400 hover:text-stone-900 hover:bg-stone-100 rounded-full transition-colors cursor-pointer"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto flex-1 text-xs text-stone-700 space-y-4">
+        <div className="p-6 overflow-y-auto flex-1 text-xs text-stone-700 space-y-4 font-normal">
           {/* Strict Redaction Warning */}
-          <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-amber-950 flex items-start gap-2.5">
-            <AlertTriangle className="w-4 h-4 text-amber-700 flex-shrink-0 mt-0.5" />
+          <div className="p-3.5 bg-orange-50/70 border border-orange-200 rounded-2xl text-orange-950 flex items-start gap-2.5">
+            <AlertTriangle className="w-4 h-4 text-orange-600 flex-shrink-0 mt-0.5" />
             <div>
-              <div className="font-semibold text-xs text-amber-900 mb-0.5">Please Redact Personal Identifiers:</div>
-              <ul className="list-disc pl-4 space-y-0.5 text-[11px] text-amber-900/90">
+              <div className="font-bold text-xs text-orange-950 mb-0.5">Please Redact Personal Identifiers:</div>
+              <ul className="list-disc pl-4 space-y-0.5 text-[11px] text-orange-900/90">
                 <li>Never upload Aadhaar card or government identity documents.</li>
                 <li>Black out or crop candidate name, roll number, address, and photograph.</li>
                 <li>Disha only uses subject names and scores to suggest eligible pathways.</li>
@@ -177,26 +177,26 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
 
           {/* Quick Demo Samples */}
           <div>
-            <div className="font-medium text-stone-600 mb-1.5 flex items-center gap-1">
-              <Sparkles className="w-3.5 h-3.5 text-amber-700" />
+            <div className="font-bold text-stone-600 mb-1.5 flex items-center gap-1">
+              <Sparkles className="w-3.5 h-3.5 text-orange-600" />
               <span>Or test with a safe, synthetic redacted sample:</span>
             </div>
             <div className="flex gap-2">
               <button
                 type="button"
                 onClick={() => loadSyntheticSample('gseb10')}
-                className="flex-1 p-2 rounded-lg border border-stone-300 bg-stone-50 hover:bg-amber-50 hover:border-amber-400 text-stone-800 text-left transition-colors cursor-pointer"
+                className="flex-1 p-2.5 rounded-2xl border border-stone-200 bg-stone-50 hover:bg-orange-50/60 hover:border-orange-300 text-stone-800 text-left transition-colors cursor-pointer"
               >
-                <div className="font-semibold text-xs">GSEB Class 10 (Gujarat)</div>
-                <div className="text-[10px] text-stone-500">Redacted synthetic marksheet</div>
+                <div className="font-bold text-xs">GSEB Class 10 (Gujarat)</div>
+                <div className="text-[10px] text-stone-400">Redacted synthetic marksheet</div>
               </button>
               <button
                 type="button"
                 onClick={() => loadSyntheticSample('cbse12')}
-                className="flex-1 p-2 rounded-lg border border-stone-300 bg-stone-50 hover:bg-amber-50 hover:border-amber-400 text-stone-800 text-left transition-colors cursor-pointer"
+                className="flex-1 p-2.5 rounded-2xl border border-stone-200 bg-stone-50 hover:bg-orange-50/60 hover:border-orange-300 text-stone-800 text-left transition-colors cursor-pointer"
               >
-                <div className="font-semibold text-xs">CBSE Class 12 (PCB)</div>
-                <div className="text-[10px] text-stone-500">Redacted synthetic marksheet</div>
+                <div className="font-bold text-xs">CBSE Class 12 (PCB)</div>
+                <div className="text-[10px] text-stone-400">Redacted synthetic marksheet</div>
               </button>
             </div>
           </div>
@@ -204,7 +204,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
           {/* Dropzone */}
           <div
             onClick={() => fileInputRef.current?.click()}
-            className="border-2 border-dashed border-stone-300 hover:border-amber-500 rounded-xl p-6 text-center cursor-pointer bg-stone-50/50 hover:bg-amber-50/30 transition-colors"
+            className="border-2 border-dashed border-stone-300 hover:border-orange-500 rounded-3xl p-6 text-center cursor-pointer bg-stone-50/50 hover:bg-orange-50/20 transition-colors"
           >
             <input
               ref={fileInputRef}
@@ -214,37 +214,37 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
               onChange={handleFileChange}
             />
             <Upload className="w-6 h-6 text-stone-400 mx-auto mb-2" />
-            <div className="font-semibold text-stone-800">
+            <div className="font-bold text-stone-800">
               {selectedFile ? selectedFile.filename : 'Choose a redacted document or image'}
             </div>
-            <div className="text-[11px] text-stone-500 mt-1">PNG, JPEG, WebP or PDF (Max 5MB)</div>
+            <div className="text-[11px] text-stone-400 mt-1">PNG, JPEG, WebP or PDF (Max 5MB)</div>
           </div>
 
           {errorMsg && (
-            <div className="p-2 rounded bg-rose-50 text-rose-700 border border-rose-200 text-xs">
+            <div className="p-2.5 rounded-2xl bg-rose-50 text-rose-700 border border-rose-200 text-xs">
               {errorMsg}
             </div>
           )}
 
           {/* Preview if available */}
           {selectedFile?.previewUrl && (
-            <div className="border border-stone-200 rounded-xl p-2 bg-stone-100 flex items-center justify-center max-h-48 overflow-hidden">
+            <div className="border border-stone-200 rounded-2xl p-2 bg-stone-100 flex items-center justify-center max-h-48 overflow-hidden">
               <img
                 src={selectedFile.previewUrl}
                 alt="Document preview"
-                className="max-h-44 object-contain rounded"
+                className="max-h-44 object-contain rounded-xl"
               />
             </div>
           )}
 
           {/* Redaction Confirmation Checkbox */}
           {selectedFile && (
-            <label className="flex items-start gap-2.5 p-3 rounded-xl bg-stone-50 border border-stone-200 cursor-pointer">
+            <label className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-stone-50 border border-stone-200 cursor-pointer">
               <input
                 type="checkbox"
                 checked={redactionConfirmed}
                 onChange={(e) => setRedactionConfirmed(e.target.checked)}
-                className="mt-0.5 rounded text-amber-800 focus:ring-amber-500"
+                className="mt-0.5 rounded text-orange-600 focus:ring-orange-500"
               />
               <span className="text-stone-800 leading-tight">
                 <strong>I confirm</strong> that personal identifiers (name, Aadhaar, roll number, photo, address) are
@@ -255,19 +255,19 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3.5 border-t border-stone-200 bg-stone-50 flex items-center justify-end gap-2">
+        <div className="px-6 py-4 border-t border-stone-100 bg-stone-50 flex items-center justify-end gap-2">
           <button
             onClick={onClose}
-            className="px-4 py-1.5 rounded-lg text-stone-600 hover:text-stone-900 hover:bg-stone-200/50 text-xs font-medium cursor-pointer"
+            className="px-4 py-1.5 rounded-full text-stone-600 hover:text-stone-900 hover:bg-stone-200/50 text-xs font-semibold cursor-pointer"
           >
             Cancel
           </button>
           <button
             onClick={handleConfirmUpload}
             disabled={!selectedFile || !redactionConfirmed || isLoading}
-            className={`px-4 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer ${
+            className={`px-5 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 shadow-xs cursor-pointer ${
               selectedFile && redactionConfirmed && !isLoading
-                ? 'bg-amber-800 hover:bg-amber-900 text-white'
+                ? 'bg-stone-900 hover:bg-stone-800 text-white'
                 : 'bg-stone-200 text-stone-400 cursor-not-allowed'
             }`}
           >

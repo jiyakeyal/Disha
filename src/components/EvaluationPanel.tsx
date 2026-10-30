@@ -170,18 +170,18 @@ ${scenarios
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto no-print">
-      <div className="bg-white rounded-2xl max-w-5xl w-full h-[90vh] flex flex-col shadow-2xl border border-stone-200 overflow-hidden animate-scale-up">
+      <div className="bg-white rounded-3xl max-w-5xl w-full h-[90vh] flex flex-col shadow-2xl border border-stone-200 overflow-hidden animate-scale-up">
         {/* Header */}
-        <div className="px-6 py-4 border-b border-stone-200 flex items-center justify-between bg-stone-50">
+        <div className="px-6 py-4.5 border-b border-stone-100 flex items-center justify-between bg-stone-50/80">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-amber-800 text-white flex items-center justify-center">
-              <Sparkles className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-500 to-purple-500 text-white flex items-center justify-center shadow-2xs">
+              <Sparkles className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h3 className="font-serif-editorial font-bold text-base text-stone-900">
+              <h3 className="font-bold text-base text-stone-900 tracking-tight">
                 Disha — Acceptance Testing & Evaluation Suite
               </h3>
-              <p className="text-xs text-stone-500">
+              <p className="text-xs text-stone-400">
                 16 Project Acceptance Tests from 06_TEST_EVALUATE_IMPROVE.md with rubric scoring.
               </p>
             </div>
@@ -190,7 +190,7 @@ ${scenarios
           <div className="flex items-center gap-2">
             <button
               onClick={handleExportReport}
-              className="px-3 py-1.5 rounded-lg border border-stone-300 bg-white hover:bg-stone-50 text-stone-700 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+              className="px-3.5 py-1.5 rounded-full border border-stone-200 bg-white hover:bg-stone-50 text-stone-700 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
             >
               <Download className="w-3.5 h-3.5" />
               <span>Export Report</span>
@@ -198,31 +198,31 @@ ${scenarios
             <button
               onClick={handleRunAllTests}
               disabled={isRunningAll}
-              className="px-3.5 py-1.5 rounded-lg bg-amber-800 hover:bg-amber-900 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer disabled:opacity-60"
+              className="px-4 py-1.5 rounded-full bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer disabled:opacity-60"
             >
               <Play className="w-3.5 h-3.5" />
               <span>{isRunningAll ? 'Running Suite...' : 'Run All 16 Tests'}</span>
             </button>
             <button
               onClick={onClose}
-              className="p-1.5 text-stone-400 hover:text-stone-700 hover:bg-stone-200/60 rounded-lg transition-colors cursor-pointer ml-2"
+              className="p-2 text-stone-400 hover:text-stone-900 hover:bg-stone-100 rounded-full transition-colors cursor-pointer ml-1"
             >
-              <X className="w-5 h-5" />
+              <X className="w-4 h-4" />
             </button>
           </div>
         </div>
 
         {/* Stats bar */}
-        <div className="px-6 py-2.5 bg-stone-100/70 border-b border-stone-200 flex items-center justify-between text-xs">
+        <div className="px-6 py-2.5 bg-stone-50 border-b border-stone-100 flex items-center justify-between text-xs">
           <div className="flex items-center gap-4">
-            <span className="font-semibold text-stone-700">Test Status:</span>
-            <span className="text-emerald-700 font-medium flex items-center gap-1">
+            <span className="font-bold text-stone-800">Test Status:</span>
+            <span className="text-emerald-700 font-semibold flex items-center gap-1">
               <CheckCircle2 className="w-3.5 h-3.5" /> {totalPassed} Passed
             </span>
-            <span className="text-rose-700 font-medium flex items-center gap-1">
+            <span className="text-rose-700 font-semibold flex items-center gap-1">
               <XCircle className="w-3.5 h-3.5" /> {totalFailed} Failed
             </span>
-            <span className="text-stone-500 font-medium flex items-center gap-1">
+            <span className="text-stone-400 font-medium flex items-center gap-1">
               <Clock className="w-3.5 h-3.5" /> {totalNotRun} Not Run
             </span>
           </div>

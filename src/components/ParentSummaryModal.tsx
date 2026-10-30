@@ -47,28 +47,28 @@ export const ParentSummaryModal: React.FC<ParentSummaryModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto no-print">
-      <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-stone-200 overflow-hidden animate-scale-up">
+      <div className="bg-white rounded-3xl max-w-2xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-stone-200 overflow-hidden animate-scale-up">
         {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-stone-200 flex items-center justify-between bg-stone-50/80">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center">
+        <div className="px-6 py-4.5 border-b border-stone-100 flex items-center justify-between bg-stone-50/80">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-500 to-purple-500 text-white flex items-center justify-center shadow-2xs">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="font-serif-editorial font-bold text-base text-stone-900">
+              <h3 className="font-bold text-base text-stone-900 tracking-tight">
                 Disha — 1-Page Family Summary
               </h3>
-              <p className="text-xs text-stone-500">
-                A concise brief for discussion between student and parents. Preview before sharing.
+              <p className="text-xs text-stone-400">
+                A concise brief for family discussion. Preview and edit before printing.
               </p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 text-stone-400 hover:text-stone-700 hover:bg-stone-200/60 rounded-lg transition-colors cursor-pointer"
+            className="p-2 text-stone-400 hover:text-stone-900 hover:bg-stone-100 rounded-full transition-colors cursor-pointer"
             aria-label="Close parent summary"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
@@ -76,15 +76,15 @@ export const ParentSummaryModal: React.FC<ParentSummaryModalProps> = ({
         <div className="p-6 overflow-y-auto flex-1 font-normal">
           {isLoading ? (
             <div className="py-16 text-center text-stone-500">
-              <div className="w-8 h-8 border-3 border-amber-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-              <p className="text-sm font-medium text-stone-700">Synthesizing active conversation into a 1-page summary...</p>
+              <div className="w-8 h-8 border-3 border-orange-600 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
+              <p className="text-sm font-semibold text-stone-800">Synthesizing active conversation into a 1-page summary...</p>
               <p className="text-xs text-stone-400 mt-1">Extracting student interests, explored trade-offs, and verified official portals.</p>
             </div>
           ) : (
             <div>
               {/* Privacy reminder */}
-              <div className="mb-4 p-2.5 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-950 text-xs flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 text-emerald-700 flex-shrink-0" />
+              <div className="mb-4 p-3 rounded-2xl bg-orange-50/70 border border-orange-200 text-orange-950 text-xs flex items-center gap-2.5">
+                <AlertCircle className="w-4 h-4 text-orange-600 flex-shrink-0" />
                 <span>
                   <strong>Student Review First:</strong> Disha never sends summaries automatically. Feel free to edit or remove any notes before printing or copying.
                 </span>
@@ -96,7 +96,7 @@ export const ParentSummaryModal: React.FC<ParentSummaryModalProps> = ({
                     <span>Edit summary content:</span>
                     <button
                       onClick={() => setIsEditing(false)}
-                      className="text-amber-800 font-semibold hover:underline"
+                      className="text-orange-700 font-bold hover:underline"
                     >
                       Done Editing
                     </button>
@@ -105,11 +105,11 @@ export const ParentSummaryModal: React.FC<ParentSummaryModalProps> = ({
                     rows={16}
                     value={editableContent}
                     onChange={(e) => setEditableContent(e.target.value)}
-                    className="w-full text-xs font-mono p-3 bg-stone-50 border border-stone-300 rounded-xl focus:ring-2 focus:ring-amber-500/20 focus:outline-hidden"
+                    className="w-full text-xs font-mono p-4 bg-stone-50 border border-stone-200 rounded-2xl focus:ring-2 focus:ring-orange-500/20 focus:outline-hidden"
                   />
                 </div>
               ) : (
-                <div className="border border-stone-200 rounded-xl p-5 bg-stone-50/40 text-stone-900 text-xs leading-relaxed font-sans">
+                <div className="border border-stone-200 rounded-2xl p-5 bg-white shadow-2xs text-stone-900 text-xs leading-relaxed font-sans">
                   <MarkdownRenderer content={editableContent} />
                 </div>
               )}
@@ -117,20 +117,20 @@ export const ParentSummaryModal: React.FC<ParentSummaryModalProps> = ({
           )}
         </div>
 
-        {/* Modal Footer Actions */}
+        {/* Modal Footer Actions: Glass and White Pill Buttons */}
         {!isLoading && (
-          <div className="px-6 py-3.5 border-t border-stone-200 bg-stone-50 flex items-center justify-between">
+          <div className="px-6 py-4 border-t border-stone-100 bg-stone-50 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setIsEditing(!isEditing)}
-                className="px-3 py-1.5 rounded-lg border border-stone-300 bg-white hover:bg-stone-50 text-stone-700 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="px-3.5 py-1.5 rounded-full border border-stone-200 bg-white hover:bg-stone-100 text-stone-700 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
               >
                 <Edit3 className="w-3.5 h-3.5" />
                 <span>{isEditing ? 'View Preview' : 'Edit Text'}</span>
               </button>
               <button
                 onClick={onRegenerate}
-                className="px-3 py-1.5 rounded-lg text-stone-600 hover:text-stone-900 hover:bg-stone-200/50 text-xs font-medium transition-colors cursor-pointer"
+                className="px-3.5 py-1.5 rounded-full text-stone-600 hover:text-stone-900 hover:bg-stone-200/50 text-xs font-medium transition-colors cursor-pointer"
               >
                 Regenerate
               </button>
@@ -139,7 +139,7 @@ export const ParentSummaryModal: React.FC<ParentSummaryModalProps> = ({
             <div className="flex items-center gap-2">
               <button
                 onClick={handleCopy}
-                className="px-3.5 py-1.5 rounded-lg border border-stone-300 bg-white hover:bg-stone-50 text-stone-700 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+                className="px-4 py-1.5 rounded-full border border-stone-200 bg-white hover:bg-stone-100 text-stone-700 text-xs font-semibold flex items-center gap-1.5 transition-colors cursor-pointer"
               >
                 {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
                 <span>{copied ? 'Copied' : 'Copy Text'}</span>
@@ -147,7 +147,7 @@ export const ParentSummaryModal: React.FC<ParentSummaryModalProps> = ({
 
               <button
                 onClick={handlePrint}
-                className="px-4 py-1.5 rounded-lg bg-amber-800 hover:bg-amber-900 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
+                className="px-4 py-1.5 rounded-full bg-stone-900 hover:bg-stone-800 text-white text-xs font-semibold flex items-center gap-1.5 transition-colors shadow-xs cursor-pointer"
               >
                 <Printer className="w-3.5 h-3.5" />
                 <span>Print / Save PDF</span>
