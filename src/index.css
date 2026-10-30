@@ -165,3 +165,30 @@
     max-width: 100% !important;
   }
 }
+
+/* Extend the composer fade to the viewport edges without covering its controls. */
+.composer-background::before {
+  content: '';
+  position: absolute;
+  inset: -5rem 0 0;
+  pointer-events: none;
+  background: linear-gradient(to top, rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0.58) 35%, transparent 100%);
+}
+
+.topic-card {
+  min-height: 108px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+  text-align: left;
+  padding: 14px;
+  border-radius: 20px;
+  border: 1px solid rgba(255,255,255,.85);
+  background: rgba(255,255,255,.62);
+  color: #261e19;
+  cursor: pointer;
+}
+.topic-card:nth-child(even) { background: rgba(255,255,255,.72); }
+.topic-card:hover { background: rgba(255,255,255,.82); }
+.topic-card:focus-visible { outline: 3px solid #542b1a; outline-offset: 2px; }

@@ -435,7 +435,7 @@ export const PromptComposer: React.FC<PromptComposerProps> = ({
   };
 
   return (
-    <div className="sticky bottom-0 bg-gradient-to-t from-white via-white/95 to-transparent pt-3 pb-4">
+    <div className="relative pt-3 pb-4">
       <div className="max-w-3xl mx-auto px-4">
         {/* Hidden audio file input for voice memo upload fallback */}
         <input

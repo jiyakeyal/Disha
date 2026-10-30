@@ -185,7 +185,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({
           <div className="mt-5 pt-3.5 border-t border-stone-100">
             <div className="text-xs font-bold text-stone-700 mb-2 flex items-center justify-between">
               <span>Verified Sources & Reference Portals:</span>
-              <span className="text-[10px] text-stone-400 font-normal">Directly retrieved via Google Search Grounding</span>
+              <span className="text-[10px] text-stone-400 font-normal">Sources returned with this response</span>
             </div>
             <div className="flex flex-wrap gap-2">
               {message.citations.map((c) => (

@@ -5,7 +5,7 @@
  * 2. OpenRouter via OpenAI-compatible REST API (for GitHub / Vercel deployments with OpenRouter API keys)
  */
 
-import { ai, DEFAULT_MODEL } from './gemini';
+import { getGeminiClient, DEFAULT_MODEL } from './gemini';
 import { parseGroundingMetadata } from './domainKnowledge';
 
 export type LLMProvider = 'openrouter' | 'gemini';
@@ -176,6 +176,10 @@ async function generateChatWithOpenRouter(
     temperature: 0.7,
   };
 
+  if (modelName === 'google/gemini-3.8-flash') {
+    requestBody.reasoning = { effort: 'low' };
+  }
+
   if (enableSearch) {
     requestBody.plugins = [{ id: 'web' }];
   }
@@ -217,6 +221,7 @@ async function generateChatWithOpenRouter(
       if (fbModel === modelName) continue;
       console.log(`[OpenRouter] Primary model ${modelName} failed (${response.status}). Retrying with ${fbModel}...`);
       requestBody.model = fbModel;
+      delete requestBody.reasoning;
       delete requestBody.plugins;
 
       const fbResp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -313,7 +318,7 @@ async function generateChatWithGoogleGemini(
     if (useSearch) {
       config.tools = [{ googleSearch: {} }];
     }
-    const resp = await ai.models.generateContent({
+    const resp = await getGeminiClient().models.generateContent({
       model: model,
       contents: contents,
       config: config,
@@ -411,7 +416,7 @@ export async function generateParentSummaryText(transcript: string, promptText: 
     const data = await response.json();
     return data.choices?.[0]?.message?.content || 'Unable to generate parent summary.';
   } else {
-    const response = await ai.models.generateContent({
+    const response = await getGeminiClient().models.generateContent({
       model: modelName,
       contents: `${promptText}\n\nTranscript:\n${transcript}`,
     });
@@ -464,7 +469,7 @@ export async function analyzeDocumentImage(
     const data = await response.json();
     return data.choices?.[0]?.message?.content || 'Could not interpret document.';
   } else {
-    const response = await ai.models.generateContent({
+    const response = await getGeminiClient().models.generateContent({
       model: modelName,
       contents: {
         parts: [
@@ -535,7 +540,7 @@ export async function transcribeAudioData(
     return (data.choices?.[0]?.message?.content || '').trim();
   } else {
     // Native Google GenAI
-    const response = await ai.models.generateContent({
+    const response = await getGeminiClient().models.generateContent({
       model: modelName,
       contents: [
         {

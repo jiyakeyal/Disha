@@ -6,6 +6,7 @@
 
 import { Router, Request, Response } from 'express';
 import { buildRuntimeSystemInstruction } from './systemPrompt';
+import { streamChat } from './streamChat';
 import { getRecommendedPortalsForQuery, OFFICIAL_AUTHORITIES } from './domainKnowledge';
 import {
   generateChat,
@@ -29,6 +30,30 @@ interface ChatRequestBody {
   personaStyle?: 'friendly_expert' | 'question_coach' | 'calm_guide';
   language?: 'english' | 'hinglish' | 'gujarati_blend';
 }
+
+apiRouter.post('/chat/stream', async (req: Request, res: Response): Promise<void> => {
+  const { message, history = [], personaStyle, language } = req.body || {};
+  if (typeof message !== 'string' || !message.trim() || message.length > 4000 || !Array.isArray(history)) {
+    res.status(400).json({ error: 'A valid message and history are required.' });
+    return;
+  }
+  const controller = new AbortController();
+  res.on('close', () => { if (!res.writableEnded) controller.abort(); });
+  res.setHeader('Content-Type', 'application/x-ndjson; charset=utf-8');
+  res.setHeader('Cache-Control', 'no-cache, no-transform');
+  res.setHeader('X-Accel-Buffering', 'no');
+  res.flushHeaders();
+  const send = (event: object) => { if (!controller.signal.aborted) res.write(JSON.stringify(event) + '\n'); };
+  try {
+    const result = await streamChat({ systemInstruction: buildRuntimeSystemInstruction({ personaStyle, language }), history, message, enableSearch: true }, text => send({ type: 'text', text }), controller.signal);
+    send({ type: 'done', citations: result.citations, recommendedPortals: getRecommendedPortalsForQuery(message), checkedAt: new Date().toISOString() });
+  } catch (error: any) {
+    if (!controller.signal.aborted) {
+      console.error('[Disha streaming error]:', error?.message || error);
+      send({ type: 'error', message: 'The response was interrupted. Please try again.' });
+    }
+  } finally { if (!res.writableEnded) res.end(); }
+});
 
 /**
  * POST /api/chat

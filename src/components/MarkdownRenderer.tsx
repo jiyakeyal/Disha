@@ -68,7 +68,7 @@ function renderInline(text: string): React.ReactNode[] {
     }
 
     // Plain text
-    return <React.Fragment key={index}>{part}</React.Fragment>;
+    return <React.Fragment key={index}>{part.replace(/\*+/g, '')}</React.Fragment>;
   });
 }
 
@@ -90,7 +90,7 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, cla
         <ul key={key} className="space-y-1.5 my-2 pl-1">
           {currentList.items.map((item, itemIdx) => (
             <li key={itemIdx} className="flex items-start gap-2 text-stone-800">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-700 mt-2 flex-shrink-0" />
+              <span className="w-2 h-2 rounded-full bg-orange-500 ring-2 ring-orange-100 mt-2 flex-shrink-0" />
               <div className="flex-1 leading-relaxed">{renderInline(item)}</div>
             </li>
           ))}
@@ -127,6 +127,19 @@ export const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({ content, cla
     if (trimmed === '---' || trimmed === '***' || trimmed === '___') {
       flushList(`list-before-${i}`);
       elements.push(<hr key={`hr-${i}`} className="my-3 border-stone-200" />);
+      continue;
+    }
+
+    // Markdown tables are displayed as readable themed comparisons.
+    if (trimmed.startsWith('|') && i + 1 < lines.length && /^\s*\|?[\s:|-]+\|\s*$/.test(lines[i + 1])) {
+      flushList(`list-before-${i}`);
+      const cells = (line: string) => line.trim().replace(/^\||\|$/g, '').split('|').map(cell => cell.trim());
+      const headers = cells(trimmed);
+      const rows: string[][] = [];
+      i += 2;
+      while (i < lines.length && lines[i].trim().startsWith('|')) { rows.push(cells(lines[i])); i++; }
+      i--;
+      elements.push(<div key={`table-${i}`} className="overflow-x-auto my-3 rounded-xl border border-orange-200/60"><table className="w-full text-left text-xs"><thead className="bg-orange-100/70"><tr>{headers.map((header, n) => <th key={n} className="px-3 py-2 font-semibold">{renderInline(header)}</th>)}</tr></thead><tbody>{rows.map((row, n) => <tr key={n} className="border-t border-orange-100">{row.map((cell, j) => <td key={j} className="px-3 py-2 align-top">{renderInline(cell)}</td>)}</tr>)}</tbody></table></div>);
       continue;
     }
 

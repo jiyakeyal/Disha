@@ -38,7 +38,7 @@ export function parseResponseSections(markdown: string): ParsedResponseSection[]
     const headingMatch = line.match(/^#{1,4}\s*(.+)$/);
     const boldHeadingMatch = line.match(/^\*\*(.+?)\*\*$/);
 
-    const titleCandidate = headingMatch ? headingMatch[1].trim() : (boldHeadingMatch ? boldHeadingMatch[1].trim() : null);
+    const titleCandidate = headingMatch ? headingMatch[1].replace(/\*+/g, '').trim() : (boldHeadingMatch ? boldHeadingMatch[1].trim() : null);
 
     if (titleCandidate) {
       const lower = titleCandidate.toLowerCase();

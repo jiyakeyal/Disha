@@ -13,11 +13,15 @@ import { DocumentUploadModal } from './components/DocumentUploadModal';
 import { SettingsDrawer } from './components/SettingsDrawer';
 import { EvaluationPanel } from './components/EvaluationPanel';
 import { MessageItem as MessageItemType, UserSettings } from './lib/types';
-import { Compass, Loader2, AlertCircle } from 'lucide-react';
+import { Compass, AlertCircle } from 'lucide-react';
+import { classifyVerification, extractHostname } from './lib/sourceVerifier';
+import { ResponseWaiting } from './components/ResponseWaiting';
 
 export default function App() {
   const [messages, setMessages] = useState<MessageItemType[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isWaitingForChat, setIsWaitingForChat] = useState(false);
+  const [isChatRequest, setIsChatRequest] = useState(false);
   const [abortController, setAbortController] = useState<AbortController | null>(null);
 
   // Modals state
@@ -59,12 +63,14 @@ export default function App() {
 
     setMessages((prev) => [...prev, userMessage]);
     setIsLoading(true);
+    setIsWaitingForChat(true);
+    setIsChatRequest(true);
 
     const controller = new AbortController();
     setAbortController(controller);
 
     try {
-      const response = await fetch('/api/chat', {
+      const response = await fetch('/api/chat/stream', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -81,19 +87,41 @@ export default function App() {
         throw new Error(errorData.error || `Server responded with status ${response.status}`);
       }
 
-      const data = await response.json();
-
-      const modelMessage: MessageItemType = {
-        id: `disha-${Date.now().toString(36)}`,
-        role: 'model',
-        content: data.text || 'I have reflected on your question.',
-        timestamp: data.checkedAt || new Date().toISOString(),
-        citations: data.citations || [],
-        recommendedPortals: data.recommendedPortals || [],
+      if (!response.body) throw new Error('Streaming is unavailable.');
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      const modelId = `disha-${Date.now().toString(36)}`;
+      let buffer = '', content = '', completed = false;
+      const processLine = (line: string) => {
+        if (!line.trim()) return;
+        const event = JSON.parse(line);
+        if (event.type === 'text') {
+          content += event.text;
+          setIsWaitingForChat(false);
+          setMessages(prev => {
+            const existing = prev.some(m => m.id === modelId);
+            return existing
+              ? prev.map(m => m.id === modelId ? { ...m, content } : m)
+              : [...prev, { id: modelId, role: 'model', content, timestamp: new Date().toISOString(), isStreaming: true }];
+          });
+        } else if (event.type === 'done') {
+          completed = true;
+          setMessages(prev => prev.map(m => m.id === modelId ? { ...m, isStreaming: false, citations: (event.citations || []).map((c: { title: string; url: string }) => ({ ...c, id: c.url, domain: extractHostname(c.url), authority: extractHostname(c.url), verificationStatus: classifyVerification(c.url), checkedAt: event.checkedAt })), recommendedPortals: event.recommendedPortals || [], timestamp: event.checkedAt } : m));
+        } else if (event.type === 'error') {
+          throw new Error(event.message);
+        }
       };
-
-      setMessages((prev) => [...prev, modelMessage]);
+      while (true) {
+        const part = await reader.read();
+        buffer += decoder.decode(part.value, { stream: !part.done });
+        const lines = buffer.split('\n'); buffer = lines.pop() || '';
+        lines.forEach(processLine);
+        if (part.done) break;
+      }
+      if (buffer.trim()) processLine(buffer);
+      if (!completed) throw new Error('The response ended unexpectedly.');
     } catch (err: any) {
+      setMessages(prev => prev.map(m => m.isStreaming ? { ...m, isStreaming: false } : m));
       if (err.name === 'AbortError') {
         console.log('User cancelled request.');
       } else {
@@ -108,6 +136,8 @@ export default function App() {
         setMessages((prev) => [...prev, errorMessage]);
       }
     } finally {
+      setIsWaitingForChat(false);
+      setIsChatRequest(false);
       setIsLoading(false);
       setAbortController(null);
     }
@@ -116,8 +146,7 @@ export default function App() {
   const handleStop = () => {
     if (abortController) {
       abortController.abort();
-      setIsLoading(false);
-      setAbortController(null);
+      setIsWaitingForChat(false);
     }
   };
 
@@ -252,23 +281,9 @@ export default function App() {
               />
             ))}
 
-            {/* Loading indicator with frosted glass card styling */}
-            {isLoading && (
-              <div className="flex justify-start mb-6">
-                <div className="glass-card rounded-3xl rounded-tl-xs px-5 py-4 flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-full bg-white/70 border border-white/90 flex items-center justify-center text-orange-600 shadow-2xs">
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  </div>
-                  <div>
-                    <div className="text-xs font-bold text-stone-900">
-                      Disha is reviewing official sources & structuring trade-offs...
-                    </div>
-                    <div className="text-[11px] text-stone-600 mt-0.5">
-                      Checking official portals and ensuring neutral, choice-preserving comparisons
-                    </div>
-                  </div>
-                </div>
-              </div>
+            {isLoading && isWaitingForChat && <ResponseWaiting />}
+            {isLoading && !isChatRequest && (
+              <div className="glass-card rounded-2xl px-5 py-4 text-sm text-stone-800">Working on your request...</div>
             )}
             <div ref={chatBottomRef} />
           </div>
@@ -276,7 +291,7 @@ export default function App() {
       </main>
 
       {/* Floating Prompt Composer with Frosted Glass Pill & Crisp White Buttons */}
-      <div className="sticky bottom-0 z-30 pb-4 px-4">
+      <div className="composer-background sticky bottom-0 z-30">
         <PromptComposer
           onSendMessage={handleSendMessage}
           isLoading={isLoading}
