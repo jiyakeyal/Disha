@@ -1,5 +1,5 @@
 import React from 'react';
-import { BookOpen, GraduationCap, Compass, Scale, CalendarCheck, ArrowUpRight, Sparkles } from 'lucide-react';
+import { BookOpen, GraduationCap, Compass, Scale, CalendarCheck, ArrowUpRight } from 'lucide-react';
 
 interface WelcomeBannerProps {
   onSelectPrompt: (promptText: string) => void;
@@ -49,23 +49,23 @@ export const WelcomeBanner: React.FC<WelcomeBannerProps> = ({ onSelectPrompt }) 
       {/* Editorial Hero Statement (Matching Reference Typography) */}
       <div className="mb-8 space-y-4">
         {/* Editorial Primary Headline */}
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-stone-950 leading-[1.18]">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-stone-950 leading-[1.18] drop-shadow-2xs">
           A moment to explore your path with clarity and care. An experience to discover choices, without pressure.
         </h1>
 
         {/* Editorial Secondary Paragraph */}
-        <p className="text-sm sm:text-base text-stone-500 font-normal leading-relaxed max-w-2xl">
+        <p className="text-sm sm:text-base text-stone-900/80 font-medium leading-relaxed max-w-2xl">
           Everything you need to navigate Class 10 & 12 decisions. Neutral, balanced comparisons across Science, Commerce, Arts, and vocational routes in Gujarat and national portals. No algorithms picking your life for you.
         </p>
 
         {/* Editorial Mission Statement & Guiding Principle */}
-        <div className="pt-2 flex flex-wrap items-center gap-2.5 text-xs text-stone-600">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-stone-100/90 text-stone-700 font-medium border border-stone-200/80">
-            <Sparkles className="w-3.5 h-3.5 text-orange-600" />
+        <div className="pt-2 flex flex-wrap items-center gap-2.5 text-xs text-stone-900">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full glass-capsule text-stone-900 font-semibold shadow-2xs">
+            <Compass className="w-3.5 h-3.5 text-amber-950" />
             <span>Parent & Student Companion</span>
           </div>
-          <span className="text-stone-300">•</span>
-          <span className="text-stone-600 font-normal">
+          <span className="text-stone-400">•</span>
+          <span className="text-stone-900/80 font-medium">
             Disha helps you examine real trade-offs and verify official portals. You and your family decide your future.
           </span>
         </div>
@@ -83,30 +83,34 @@ export const WelcomeBanner: React.FC<WelcomeBannerProps> = ({ onSelectPrompt }) 
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          {starters.map((item) => (
+          {starters.map((item, idx) => (
             <button
               key={item.label}
               type="button"
               onClick={() => onSelectPrompt(item.prompt)}
-              className="flex flex-col justify-between p-4 sm:p-4.5 rounded-2xl bg-white border border-stone-200/80 hover:border-orange-500/80 hover:shadow-md transition-all duration-200 text-left group cursor-pointer shadow-xs"
+              className={`flex flex-col justify-between p-4 sm:p-4.5 rounded-3xl text-left group cursor-pointer transition-all duration-200 ${
+                idx % 2 === 0
+                  ? 'glass-card glass-card-hover'
+                  : 'bg-white/75 backdrop-blur-md border border-white/80 hover:bg-white hover:shadow-lg hover:border-white shadow-xs'
+              }`}
             >
               <div>
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-2">
-                    <div className="p-1.5 rounded-lg bg-stone-50 border border-stone-100 group-hover:bg-orange-50 group-hover:border-orange-200 transition-colors">
+                    <div className="p-1.5 rounded-xl bg-white/70 border border-white/80 group-hover:bg-white transition-colors shadow-2xs">
                       {item.icon}
                     </div>
-                    <span className="text-[10px] font-semibold tracking-wider uppercase text-stone-400 group-hover:text-orange-700 transition-colors">
+                    <span className="text-[10px] font-bold tracking-wider uppercase text-stone-700/80 group-hover:text-stone-900 transition-colors">
                       {item.badge}
                     </span>
                   </div>
-                  <ArrowUpRight className="w-4 h-4 text-stone-300 group-hover:text-orange-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+                  <ArrowUpRight className="w-4 h-4 text-stone-400 group-hover:text-orange-600 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                 </div>
 
                 <div className="font-bold text-sm text-stone-900 group-hover:text-orange-950 transition-colors mb-1">
                   {item.label}
                 </div>
-                <div className="text-xs text-stone-500 leading-relaxed font-normal">
+                <div className="text-xs text-stone-700/85 leading-relaxed font-normal">
                   {item.description}
                 </div>
               </div>

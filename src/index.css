@@ -7,11 +7,134 @@
   body {
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     color: #1c1917;
-    background-color: #ededeb;
     margin: 0;
     padding: 0;
     -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
   }
+}
+
+/* 
+ * Pixel Mosaic Gradient Background exactly matching the attached reference image:
+ * Warm tones of sunset orange, amber peach, lilac violet, with crisp geometric pixel grid
+ */
+.disha-mosaic-bg {
+  min-height: 100vh;
+  background-color: #f97316;
+  background-image: 
+    /* Ambient warm highlights */
+    radial-gradient(circle at 12% 25%, rgba(255, 115, 30, 0.95) 0%, transparent 40%),
+    radial-gradient(circle at 88% 18%, rgba(200, 175, 240, 0.92) 0%, transparent 45%),
+    radial-gradient(circle at 50% 32%, rgba(245, 210, 175, 0.88) 0%, transparent 48%),
+    radial-gradient(circle at 82% 70%, rgba(215, 185, 235, 0.85) 0%, transparent 45%),
+    radial-gradient(circle at 25% 82%, rgba(255, 140, 140, 0.82) 0%, transparent 45%),
+    radial-gradient(circle at 75% 92%, rgba(255, 95, 20, 0.95) 0%, transparent 50%),
+    /* Pixel mosaic geometric grid simulating the pixelated art blocks from reference */
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    /* Base rich multi-stop gradient */
+    linear-gradient(135deg, 
+      #f96924 0%, 
+      #fb923c 22%, 
+      #fbd5b5 42%, 
+      #e2d1eb 62%, 
+      #c4a8ea 82%, 
+      #f97316 100%
+    );
+  background-size: 
+    100% 100%, 
+    100% 100%, 
+    100% 100%, 
+    100% 100%, 
+    100% 100%, 
+    100% 100%, 
+    28px 28px, 
+    28px 28px, 
+    100% 100%;
+  background-attachment: fixed;
+}
+
+/* 
+ * Frosted Glass Capsule (Header bar matching the 'TRIBE CAPITAL' capsule in reference image)
+ */
+.glass-capsule {
+  background: rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow: 0 4px 24px -2px rgba(220, 90, 30, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+/*
+ * Translucent Glass Pill Button (matching 'menu' pill button in reference image)
+ */
+.glass-pill-btn {
+  background: rgba(255, 255, 255, 0.35);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  color: #2b170c;
+  border-radius: 9999px;
+  font-weight: 600;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 2px 10px -1px rgba(180, 70, 20, 0.12), inset 0 1px 0.5px 0 rgba(255, 255, 255, 0.7);
+}
+
+.glass-pill-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.52);
+  border-color: rgba(255, 255, 255, 0.85);
+  color: #120904;
+  box-shadow: 0 4px 16px -1px rgba(180, 70, 20, 0.2), inset 0 1px 1px 0 rgba(255, 255, 255, 0.9);
+  transform: translateY(-1px);
+}
+
+.glass-pill-btn:active:not(:disabled) {
+  transform: translateY(0);
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/*
+ * Solid Crisp White Pill Button (as requested by user)
+ */
+.white-pill-btn {
+  background: #ffffff;
+  color: #1c1917;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 9999px;
+  font-weight: 600;
+  box-shadow: 0 2px 10px -1px rgba(0, 0, 0, 0.08), 0 1px 2px 0 rgba(0, 0, 0, 0.04);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.white-pill-btn:hover:not(:disabled) {
+  background: #fafaf9;
+  border-color: #ffffff;
+  color: #0c0a09;
+  box-shadow: 0 4px 16px -2px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+}
+
+.white-pill-btn:active:not(:disabled) {
+  transform: translateY(0);
+  background: #f5f5f4;
+}
+
+/*
+ * Frosted Glass Card container
+ */
+.glass-card {
+  background: rgba(255, 255, 255, 0.42);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 8px 32px 0 rgba(200, 80, 25, 0.12), inset 0 1px 2px 0 rgba(255, 255, 255, 0.7);
+}
+
+.glass-card-hover:hover {
+  background: rgba(255, 255, 255, 0.58);
+  border-color: rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 36px 0 rgba(200, 80, 25, 0.18), inset 0 1px 2px 0 rgba(255, 255, 255, 0.85);
+  transform: translateY(-1.5px);
 }
 
 .pixelated {

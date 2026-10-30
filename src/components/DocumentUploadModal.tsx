@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { X, Upload, ShieldCheck, FileCheck, AlertTriangle, FileText, Sparkles } from 'lucide-react';
+import { X, Upload, ShieldCheck, FileCheck, AlertTriangle, FileText } from 'lucide-react';
 
 interface DocumentUploadModalProps {
   isOpen: boolean;
@@ -178,7 +178,7 @@ export const DocumentUploadModal: React.FC<DocumentUploadModalProps> = ({
           {/* Quick Demo Samples */}
           <div>
             <div className="font-bold text-stone-600 mb-1.5 flex items-center gap-1">
-              <Sparkles className="w-3.5 h-3.5 text-orange-600" />
+              <FileCheck className="w-3.5 h-3.5 text-orange-600" />
               <span>Or test with a safe, synthetic redacted sample:</span>
             </div>
             <div className="flex gap-2">

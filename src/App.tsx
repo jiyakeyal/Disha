@@ -4,7 +4,7 @@
  */
 
 import React, { useState, useRef, useEffect } from 'react';
-import { PixelArtHeader } from './components/PixelArtHeader';
+import { Header } from './components/Header';
 import { WelcomeBanner } from './components/WelcomeBanner';
 import { MessageItem } from './components/MessageItem';
 import { PromptComposer } from './components/PromptComposer';
@@ -13,7 +13,7 @@ import { DocumentUploadModal } from './components/DocumentUploadModal';
 import { SettingsDrawer } from './components/SettingsDrawer';
 import { EvaluationPanel } from './components/EvaluationPanel';
 import { MessageItem as MessageItemType, UserSettings } from './lib/types';
-import { Sparkles, AlertCircle } from 'lucide-react';
+import { Compass, Loader2, AlertCircle } from 'lucide-react';
 
 export default function App() {
   const [messages, setMessages] = useState<MessageItemType[]>([]);
@@ -227,57 +227,56 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#eceae6] text-stone-900 selection:bg-orange-200 py-0 sm:py-6 px-0 sm:px-4 flex justify-center items-start">
-      {/* Centered Presentation Card (Matching Reference Photo Frame) */}
-      <div className="w-full max-w-4xl bg-white rounded-none sm:rounded-[36px] shadow-2xl border border-stone-200/80 overflow-hidden flex flex-col min-h-screen sm:min-h-[92vh]">
-        {/* Pixel Art Mosaic Header with Frosted Glass Buttons */}
-        <PixelArtHeader
-          onOpenParentSummary={handleGenerateParentSummary}
-          onOpenSettings={() => setIsSettingsOpen(true)}
-          onOpenEvaluation={() => setIsEvaluationOpen(true)}
-          onResetSession={handleResetSession}
-          hasMessages={messages.length > 0}
-        />
+    <div className="min-h-screen disha-mosaic-bg text-stone-900 selection:bg-orange-200 flex flex-col justify-between">
+      {/* Top Floating Glass Header Capsule (Matching 'TRIBE CAPITAL' in image) */}
+      <Header
+        onOpenParentSummary={handleGenerateParentSummary}
+        onOpenSettings={() => setIsSettingsOpen(true)}
+        onOpenEvaluation={() => setIsEvaluationOpen(true)}
+        onResetSession={handleResetSession}
+        hasMessages={messages.length > 0}
+      />
 
-        {/* Main Pure White Content Area */}
-        <main className="flex-1 w-full px-4 sm:px-8 py-5 sm:py-6 flex flex-col justify-between bg-white">
-          {messages.length === 0 ? (
-            <WelcomeBanner onSelectPrompt={(text) => handleSendMessage(text)} />
-          ) : (
-            <div className="flex-1 space-y-4 max-w-3xl mx-auto w-full">
-              {messages.map((msg) => (
-                <MessageItem
-                  key={msg.id}
-                  message={msg}
-                  onRetry={(text) => handleSendMessage(text)}
-                  speechAudioEnabled={settings.speechAudioEnabled}
-                />
-              ))}
+      {/* Main Content Area over the Pixel Mosaic Background */}
+      <main className="flex-1 w-full max-w-4xl mx-auto px-4 sm:px-6 py-4 flex flex-col justify-between">
+        {messages.length === 0 ? (
+          <WelcomeBanner onSelectPrompt={(text) => handleSendMessage(text)} />
+        ) : (
+          <div className="flex-1 space-y-4 max-w-3xl mx-auto w-full pb-6">
+            {messages.map((msg) => (
+              <MessageItem
+                key={msg.id}
+                message={msg}
+                onRetry={(text) => handleSendMessage(text)}
+                speechAudioEnabled={settings.speechAudioEnabled}
+              />
+            ))}
 
-              {/* Loading indicator */}
-              {isLoading && (
-                <div className="flex justify-start mb-6">
-                  <div className="rounded-3xl rounded-tl-xs bg-white border border-orange-200/90 px-5 py-4 shadow-sm flex items-center gap-3">
-                    <div className="w-7 h-7 rounded-full bg-orange-100 border border-orange-300 flex items-center justify-center text-orange-600 animate-pulse">
-                      <Sparkles className="w-4 h-4" />
+            {/* Loading indicator with frosted glass card styling */}
+            {isLoading && (
+              <div className="flex justify-start mb-6">
+                <div className="glass-card rounded-3xl rounded-tl-xs px-5 py-4 flex items-center gap-3">
+                  <div className="w-7 h-7 rounded-full bg-white/70 border border-white/90 flex items-center justify-center text-orange-600 shadow-2xs">
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  </div>
+                  <div>
+                    <div className="text-xs font-bold text-stone-900">
+                      Disha is reviewing official sources & structuring trade-offs...
                     </div>
-                    <div>
-                      <div className="text-xs font-bold text-stone-900">
-                        Disha is reviewing official sources & structuring trade-offs...
-                      </div>
-                      <div className="text-[11px] text-stone-500 mt-0.5">
-                        Checking official portals and ensuring neutral, choice-preserving comparisons
-                      </div>
+                    <div className="text-[11px] text-stone-600 mt-0.5">
+                      Checking official portals and ensuring neutral, choice-preserving comparisons
                     </div>
                   </div>
                 </div>
-              )}
-              <div ref={chatBottomRef} />
-            </div>
-          )}
-        </main>
+              </div>
+            )}
+            <div ref={chatBottomRef} />
+          </div>
+        )}
+      </main>
 
-        {/* Message Composer anchored cleanly at bottom of the white card */}
+      {/* Floating Prompt Composer with Frosted Glass Pill & Crisp White Buttons */}
+      <div className="sticky bottom-0 z-30 pb-4 px-4">
         <PromptComposer
           onSendMessage={handleSendMessage}
           isLoading={isLoading}

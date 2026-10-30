@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Play, CheckCircle2, XCircle, AlertCircle, Clock, ShieldCheck, Download, Sparkles } from 'lucide-react';
+import { X, Play, CheckCircle2, XCircle, AlertCircle, Clock, ShieldCheck, Download, FlaskConical } from 'lucide-react';
 import { TestScenario } from '../lib/types';
 import { INITIAL_TEST_SCENARIOS } from '../lib/evaluationSuite';
 import { SourceCitationBadge } from './SourceCitationBadge';
@@ -175,7 +175,7 @@ ${scenarios
         <div className="px-6 py-4.5 border-b border-stone-100 flex items-center justify-between bg-stone-50/80">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-500 to-purple-500 text-white flex items-center justify-center shadow-2xs">
-              <Sparkles className="w-4 h-4 text-white" />
+              <FlaskConical className="w-4 h-4 text-white" />
             </div>
             <div>
               <h3 className="font-bold text-base text-stone-900 tracking-tight">

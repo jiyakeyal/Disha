@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Printer, Copy, Check, Sparkles, AlertCircle, Edit3 } from 'lucide-react';
+import { X, Printer, Copy, Check, FileText, AlertCircle, Edit3 } from 'lucide-react';
 import { formatPrintableParentSummary } from '../lib/formatters';
 import { MarkdownRenderer } from './MarkdownRenderer';
 
@@ -52,7 +52,7 @@ export const ParentSummaryModal: React.FC<ParentSummaryModalProps> = ({
         <div className="px-6 py-4.5 border-b border-stone-100 flex items-center justify-between bg-stone-50/80">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-orange-500 to-purple-500 text-white flex items-center justify-center shadow-2xs">
-              <Sparkles className="w-4 h-4" />
+              <FileText className="w-4 h-4" />
             </div>
             <div>
               <h3 className="font-bold text-base text-stone-900 tracking-tight">

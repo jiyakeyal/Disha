@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Copy, Check, Volume2, VolumeX, RotateCcw, Sparkles, User, FileText } from 'lucide-react';
+import { Copy, Check, Volume2, VolumeX, RotateCcw, Compass, User, FileText } from 'lucide-react';
 import { MessageItem as MessageItemType } from '../lib/types';
 import { SourceCitationBadge } from './SourceCitationBadge';
 import { RecommendedPortalsCard } from './RecommendedPortalsCard';
@@ -93,28 +93,30 @@ export const MessageItem: React.FC<MessageItemProps> = ({
 
   return (
     <div className="flex justify-start mb-6 group">
-      <div className="w-full max-w-[96%] sm:max-w-[92%] rounded-2xl sm:rounded-3xl rounded-tl-xs bg-white border border-stone-200/90 px-5 sm:px-6 py-5 shadow-sm">
+      <div className="w-full max-w-[96%] sm:max-w-[92%] rounded-3xl rounded-tl-xs glass-card px-5 sm:px-6 py-5 shadow-lg">
         {/* Header bar */}
-        <div className="flex items-center justify-between pb-3 mb-4 border-b border-stone-100">
+        <div className="flex items-center justify-between pb-3 mb-4 border-b border-white/50">
           <div className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-full bg-gradient-to-tr from-orange-500 to-purple-500 flex items-center justify-center text-white shadow-2xs">
-              <Sparkles className="w-3.5 h-3.5 text-white" />
+            <div className="w-7 h-7 rounded-full bg-white/70 border border-white/80 flex items-center justify-center text-orange-600 shadow-2xs">
+              <Compass className="w-3.5 h-3.5" />
             </div>
             <div>
               <span className="font-bold text-sm text-stone-950 tracking-tight">Disha</span>
-              <span className="text-[11px] text-stone-400 ml-2 font-medium">Career Choices, Clearly</span>
+              <span className="text-[11px] text-stone-700/80 ml-2 font-medium">Career Choices, Clearly</span>
             </div>
           </div>
 
-          {/* Frosted Glass Controls */}
+          {/* Frosted Glass & White Pill Controls */}
           <div className="flex items-center gap-1.5">
             <button
               type="button"
               onClick={handleToggleSpeech}
               title={isPlayingAudio ? 'Stop readout' : 'Listen to this response'}
               aria-label={isPlayingAudio ? 'Stop readout' : 'Listen to this response'}
-              className={`p-2 rounded-full text-stone-500 hover:text-stone-900 bg-stone-100 hover:bg-stone-200/80 transition-all cursor-pointer ${
-                isPlayingAudio ? 'text-orange-600 bg-orange-100/80 animate-pulse' : ''
+              className={`p-2 rounded-full transition-all cursor-pointer ${
+                isPlayingAudio
+                  ? 'bg-orange-600 text-white ring-2 ring-orange-300 animate-pulse'
+                  : 'white-pill-btn p-2 hover:bg-stone-50 text-stone-700'
               }`}
             >
               {isPlayingAudio ? <VolumeX className="w-3.5 h-3.5" /> : <Volume2 className="w-3.5 h-3.5" />}
@@ -125,7 +127,7 @@ export const MessageItem: React.FC<MessageItemProps> = ({
               onClick={handleCopy}
               title="Copy answer"
               aria-label="Copy answer text"
-              className="p-2 rounded-full text-stone-500 hover:text-stone-900 bg-stone-100 hover:bg-stone-200/80 transition-all cursor-pointer"
+              className="white-pill-btn p-2 hover:bg-stone-50 text-stone-700 transition-all cursor-pointer"
             >
               {copied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
             </button>
@@ -135,9 +137,9 @@ export const MessageItem: React.FC<MessageItemProps> = ({
                 type="button"
                 onClick={() => onRetry(message.content)}
                 title="Retry message"
-                className="px-3 py-1 rounded-full bg-orange-100 text-orange-900 hover:bg-orange-200/80 transition-all flex items-center gap-1 text-xs font-semibold cursor-pointer"
+                className="white-pill-btn px-3.5 py-1 text-orange-950 hover:bg-orange-50 transition-all flex items-center gap-1 text-xs font-semibold cursor-pointer shadow-xs"
               >
-                <RotateCcw className="w-3.5 h-3.5" />
+                <RotateCcw className="w-3.5 h-3.5 text-orange-600" />
                 <span>Retry</span>
               </button>
             )}

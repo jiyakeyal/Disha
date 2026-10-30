@@ -1,5 +1,5 @@
 import React from 'react';
-import { PlusCircle, FileText, FlaskConical, Settings, ShieldCheck, Sparkles } from 'lucide-react';
+import { PlusCircle, FileText, FlaskConical, Settings, ShieldCheck, Compass } from 'lucide-react';
 
 interface PixelArtHeaderProps {
   onOpenParentSummary: () => void;
@@ -60,7 +60,7 @@ export const PixelArtHeader: React.FC<PixelArtHeaderProps> = ({
         {/* Brand on Left: Clean white typography matching reference photo */}
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 flex items-center justify-center text-white shadow-xs">
-            <Sparkles className="w-4 h-4 text-white" />
+            <Compass className="w-4 h-4 text-white" />
           </div>
           <div>
             <div className="flex items-center gap-2">

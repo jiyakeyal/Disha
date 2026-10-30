@@ -564,24 +564,24 @@ export const PromptComposer: React.FC<PromptComposerProps> = ({
           </div>
         )}
 
-        {/* Input box container: Pure White Box with Glass Accents */}
+        {/* Input box container: Translucent Frosted Glass Capsule */}
         <form
           onSubmit={handleSubmit}
-          className="relative bg-white rounded-3xl border border-stone-200/90 focus-within:border-orange-500/80 focus-within:ring-2 focus-within:ring-orange-500/20 shadow-md transition-all"
+          className="relative glass-capsule rounded-full focus-within:border-white/90 focus-within:ring-2 focus-within:ring-white/40 shadow-xl transition-all"
         >
-          <div className="flex items-end p-2.5 sm:p-3 gap-2">
-            {/* Attachment / Upload document button: Sleek Glass Button */}
+          <div className="flex items-center px-3 py-2 sm:py-2.5 gap-2">
+            {/* Attachment button: Glass circular button */}
             <button
               type="button"
               onClick={onOpenUploadModal}
               title="Upload redacted marksheet or document checklist"
               aria-label="Upload redacted marksheet or document checklist"
-              className="p-2.5 text-stone-500 hover:text-stone-900 hover:bg-stone-100 rounded-full transition-colors cursor-pointer flex-shrink-0"
+              className="p-2 text-stone-700 hover:text-stone-950 hover:bg-white/40 rounded-full transition-colors cursor-pointer flex-shrink-0"
             >
               <Paperclip className="w-4 h-4" />
             </button>
 
-            {/* Voice Microphone / Voice Memo Button: Sleek Glass Pill */}
+            {/* Voice Microphone Button: Crisp White Pill Button */}
             <button
               type="button"
               onClick={isRecording ? stopRecordingAndTranscribe : startRecording}
@@ -592,15 +592,15 @@ export const PromptComposer: React.FC<PromptComposerProps> = ({
                   : 'Record voice memo / speak your question (Microphone)'
               }
               aria-label={isRecording ? 'Finish speaking' : 'Record voice memo'}
-              className={`p-2.5 rounded-full transition-all cursor-pointer flex-shrink-0 flex items-center gap-1.5 ${
+              className={`p-2 rounded-full transition-all cursor-pointer flex-shrink-0 flex items-center gap-1.5 ${
                 isRecording
-                  ? 'bg-orange-600 text-white ring-2 ring-orange-400 animate-pulse'
-                  : 'text-stone-600 hover:text-orange-900 hover:bg-orange-50/80'
+                  ? 'bg-orange-600 text-white ring-2 ring-orange-300 animate-pulse'
+                  : 'white-pill-btn p-2 hover:bg-stone-50 text-stone-800'
               }`}
             >
               {isRecording ? (
                 <>
-                  <Square className="w-4 h-4 fill-current" />
+                  <Square className="w-3.5 h-3.5 fill-current" />
                   <span className="text-xs font-semibold pr-1">Stop</span>
                 </>
               ) : (
@@ -620,20 +620,20 @@ export const PromptComposer: React.FC<PromptComposerProps> = ({
                   ? 'Speaking... your words are transcribing live here...'
                   : 'Ask about streams after 10th, college cutoffs, careers, or trade-offs...'
               }
-              className="w-full resize-none border-0 bg-transparent py-1 px-1 text-sm text-stone-900 placeholder:text-stone-400 focus:outline-hidden focus:ring-0 max-h-40 overflow-y-auto leading-relaxed font-normal"
+              className="w-full resize-none border-0 bg-transparent py-1.5 px-2 text-sm text-stone-950 placeholder:text-stone-700/60 focus:outline-hidden focus:ring-0 max-h-40 overflow-y-auto leading-relaxed font-medium"
               aria-label="Your career or education question"
             />
 
-            {/* Send or Stop button: High contrast modern action */}
+            {/* Send or Stop button: Crisp White Pill Button (or Active Square) */}
             {isLoading ? (
               <button
                 type="button"
                 onClick={onStop}
                 title="Stop response"
                 aria-label="Stop current response"
-                className="p-2.5 rounded-full bg-stone-900 text-white hover:bg-stone-800 transition-colors cursor-pointer flex-shrink-0 shadow-xs"
+                className="p-2.5 rounded-full bg-stone-900 text-white hover:bg-stone-800 transition-colors cursor-pointer flex-shrink-0 shadow-sm"
               >
-                <Square className="w-4 h-4 fill-current" />
+                <Square className="w-3.5 h-3.5 fill-current" />
               </button>
             ) : (
               <button
@@ -641,42 +641,45 @@ export const PromptComposer: React.FC<PromptComposerProps> = ({
                 disabled={!input.trim() || isRecording}
                 title="Send message (Enter)"
                 aria-label="Send message"
-                className={`p-2.5 rounded-full transition-all cursor-pointer flex-shrink-0 ${
+                className={`px-4 py-2 rounded-full transition-all cursor-pointer flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold ${
                   input.trim() && !isRecording
-                    ? 'bg-stone-900 text-white hover:bg-stone-800 shadow-xs hover:scale-105 active:scale-95'
-                    : 'bg-stone-100 text-stone-300 cursor-not-allowed'
+                    ? 'white-pill-btn text-stone-900 hover:text-black shadow-md hover:scale-105 active:scale-95'
+                    : 'bg-white/30 text-stone-400 border border-white/40 cursor-not-allowed opacity-60'
                 }`}
               >
-                <Send className="w-4 h-4" />
+                <span>Ask</span>
+                <Send className="w-3.5 h-3.5 text-orange-600" />
               </button>
             )}
           </div>
         </form>
 
         {/* Footnote with voice options and quick voice memo triggers */}
-        <div className="mt-2.5 flex flex-wrap items-center justify-between text-[11px] text-stone-500 px-2 gap-2">
-          <div className="flex items-center gap-1.5">
-            <Shield className="w-3 h-3 text-emerald-600 flex-shrink-0" />
-            <span>Session privacy • Audio is processed transiently and never stored</span>
+        <div className="mt-2 flex flex-wrap items-center justify-between text-[11px] text-stone-900/80 px-2 gap-2">
+          <div className="flex items-center gap-1.5 font-medium">
+            <Shield className="w-3 h-3 text-emerald-800 flex-shrink-0" />
+            <span>Session privacy • Audio processed transiently and never stored</span>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            {/* Glass Pill Button for Upload Voice Memo */}
             <button
               type="button"
               onClick={() => audioFileInputRef.current?.click()}
-              className="text-[11px] text-stone-500 hover:text-stone-900 flex items-center gap-1 cursor-pointer transition-colors"
+              className="glass-pill-btn px-3 py-1 text-[11px] flex items-center gap-1 cursor-pointer"
               title="Upload a voice memo file from your phone or device"
             >
-              <UploadCloud className="w-3 h-3 text-orange-600" />
+              <UploadCloud className="w-3 h-3 text-amber-950" />
               <span>Upload Voice Memo</span>
             </button>
 
+            {/* Glass Pill Button for Voice Settings */}
             <button
               type="button"
               onClick={() => setIsVoiceHelpOpen(true)}
-              className="text-[11px] text-stone-600 hover:text-stone-900 flex items-center gap-1 cursor-pointer font-medium"
+              className="glass-pill-btn px-3 py-1 text-[11px] flex items-center gap-1 cursor-pointer font-medium"
             >
-              <HelpCircle className="w-3 h-3 text-stone-400" />
+              <HelpCircle className="w-3 h-3 text-amber-950" />
               <span>Voice Settings</span>
             </button>
           </div>

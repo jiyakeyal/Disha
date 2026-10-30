@@ -1,5 +1,5 @@
 import React from 'react';
-import { Sparkles, FileText, Settings, FlaskConical, PlusCircle, ShieldCheck } from 'lucide-react';
+import { Compass, FileText, Settings, FlaskConical, PlusCircle, ShieldCheck } from 'lucide-react';
 
 interface HeaderProps {
   onOpenParentSummary: () => void;
@@ -26,7 +26,7 @@ export const Header: React.FC<HeaderProps> = ({
         {/* Brand identity */}
         <div className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-white/40 border border-white/60 text-stone-900 flex items-center justify-center shadow-xs">
-            <Sparkles className="w-4 h-4 text-amber-900" />
+            <Compass className="w-4 h-4 text-amber-900" />
           </div>
           <div>
             <div className="flex items-center gap-2">
@@ -44,56 +44,56 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </div>
 
-        {/* Action items styled with reference image pill button appearance */}
+        {/* Action items styled with reference image pill button appearance (mix of glass and white pill buttons) */}
         <div className="flex items-center gap-1.5 sm:gap-2">
-          {/* New Chat */}
+          {/* New Chat - Crisp White Pill Button */}
           {hasMessages && (
             <button
               onClick={onResetSession}
-              className="glass-pill-btn px-3 py-1.5 text-xs flex items-center gap-1.5 cursor-pointer"
+              className="white-pill-btn px-3.5 py-1.5 text-xs flex items-center gap-1.5 cursor-pointer"
               title="Start a new session"
               aria-label="New Conversation"
             >
-              <PlusCircle className="w-3.5 h-3.5" />
+              <PlusCircle className="w-3.5 h-3.5 text-orange-600" />
               <span className="hidden md:inline">New Chat</span>
             </button>
           )}
 
-          {/* Parent Summary Pill Button */}
+          {/* Parent Summary Pill Button - Crisp White Pill Button */}
           <button
             onClick={onOpenParentSummary}
             disabled={!hasMessages}
-            className={`px-3.5 py-1.5 text-xs font-medium flex items-center gap-1.5 rounded-full transition-all cursor-pointer ${
+            className={`px-3.5 py-1.5 text-xs flex items-center gap-1.5 rounded-full transition-all cursor-pointer ${
               hasMessages
-                ? 'glass-pill-btn font-semibold'
-                : 'bg-white/20 text-stone-400 border border-white/30 cursor-not-allowed opacity-60'
+                ? 'white-pill-btn font-semibold text-stone-900 shadow-sm'
+                : 'bg-white/40 text-stone-500 border border-white/50 cursor-not-allowed opacity-70'
             }`}
             title="Generate a 1-page summary for family discussion"
             aria-label="Generate Parent Summary"
           >
-            <FileText className="w-3.5 h-3.5 text-stone-800" />
+            <FileText className="w-3.5 h-3.5 text-orange-600" />
             <span>Parent Summary</span>
           </button>
 
-          {/* Evaluation / Dev View */}
+          {/* Evaluation / Dev View - Frosted Glass Pill Button (matching 'menu' in image) */}
           <button
             onClick={onOpenEvaluation}
-            className="glass-pill-btn px-3 py-1.5 text-xs flex items-center gap-1 cursor-pointer"
+            className="glass-pill-btn px-3.5 py-1.5 text-xs flex items-center gap-1 cursor-pointer"
             title="Evaluation Suite (16 Acceptance Tests from 06_TEST_EVALUATE_IMPROVE.md)"
             aria-label="Evaluation & Test Suite"
           >
-            <FlaskConical className="w-3.5 h-3.5 text-amber-900" />
+            <FlaskConical className="w-3.5 h-3.5 text-amber-950" />
             <span className="hidden sm:inline">Eval</span>
           </button>
 
-          {/* Settings */}
+          {/* Settings - Frosted Glass Circular Pill Button */}
           <button
             onClick={onOpenSettings}
             className="glass-pill-btn p-2 rounded-full cursor-pointer flex items-center justify-center"
             title="Language & Style Preferences"
             aria-label="Preferences and Settings"
           >
-            <Settings className="w-3.5 h-3.5" />
+            <Settings className="w-3.5 h-3.5 text-amber-950" />
           </button>
         </div>
       </div>
