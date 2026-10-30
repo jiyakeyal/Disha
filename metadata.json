@@ -1,0 +1,6 @@
+{
+  "name": "Disha — Career Choices, Clearly",
+  "description": "A trustworthy conversational career-exploration companion for Indian students aged 14–19 and their parents, with source-grounded guidance and neutral trade-off comparisons.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
