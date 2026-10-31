@@ -5,9 +5,9 @@
  */
 
 import { Router, Request, Response } from 'express';
-import { buildRuntimeSystemInstruction } from './systemPrompt';
-import { streamChat } from './streamChat';
-import { getRecommendedPortalsForQuery, OFFICIAL_AUTHORITIES } from './domainKnowledge';
+import { buildRuntimeSystemInstruction } from './systemPrompt.js';
+import { streamChat } from './streamChat.js';
+import { getRecommendedPortalsForQuery, OFFICIAL_AUTHORITIES } from './domainKnowledge.js';
 import {
   generateChat,
   generateParentSummaryText,
@@ -15,7 +15,7 @@ import {
   transcribeAudioData,
   getLLMProvider,
   getActiveModelName,
-} from './llmAdapter';
+} from './llmAdapter.js';
 
 export const apiRouter = Router();
 

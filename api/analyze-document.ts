@@ -1,4 +1,4 @@
-import { analyzeDocumentImage } from '../server/llmAdapter';
+import { analyzeDocumentImage } from '../server/llmAdapter.js';
 
 export default async function handler(req: any, res: any) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');

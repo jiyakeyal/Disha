@@ -5,8 +5,8 @@
  * 2. OpenRouter via OpenAI-compatible REST API (for GitHub / Vercel deployments with OpenRouter API keys)
  */
 
-import { getGeminiClient, DEFAULT_MODEL } from './gemini';
-import { parseGroundingMetadata } from './domainKnowledge';
+import { getGeminiClient, DEFAULT_MODEL } from './gemini.js';
+import { parseGroundingMetadata } from './domainKnowledge.js';
 
 export type LLMProvider = 'openrouter' | 'gemini';
 

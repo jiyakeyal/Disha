@@ -1,5 +1,5 @@
-import { getLLMProvider, getActiveModelName } from '../server/llmAdapter';
-import { OFFICIAL_AUTHORITIES } from '../server/domainKnowledge';
+import { getLLMProvider, getActiveModelName } from '../server/llmAdapter.js';
+import { OFFICIAL_AUTHORITIES } from '../server/domainKnowledge.js';
 
 export default function handler(_req: any, res: any) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');

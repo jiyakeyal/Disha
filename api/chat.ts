@@ -1,6 +1,6 @@
-import { buildRuntimeSystemInstruction } from '../server/systemPrompt';
-import { getRecommendedPortalsForQuery } from '../server/domainKnowledge';
-import { generateChat } from '../server/llmAdapter';
+import { buildRuntimeSystemInstruction } from '../server/systemPrompt.js';
+import { getRecommendedPortalsForQuery } from '../server/domainKnowledge.js';
+import { generateChat } from '../server/llmAdapter.js';
 
 export default async function handler(req: any, res: any) {
   // Always allow CORS for web clients

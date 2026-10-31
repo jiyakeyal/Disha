@@ -1,4 +1,4 @@
-import { ChatCompletionOptions, getActiveApiKey, getActiveModelName, getLLMProvider, generateChat } from './llmAdapter';
+import { ChatCompletionOptions, getActiveApiKey, getActiveModelName, getLLMProvider, generateChat } from './llmAdapter.js';
 
 export async function streamChat(options: ChatCompletionOptions, onText: (text: string) => void, signal: AbortSignal) {
   if (getLLMProvider() !== 'openrouter') {

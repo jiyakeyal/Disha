@@ -1,4 +1,4 @@
-import { generateParentSummaryText } from '../server/llmAdapter';
+import { generateParentSummaryText } from '../server/llmAdapter.js';
 
 export default async function handler(req: any, res: any) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
